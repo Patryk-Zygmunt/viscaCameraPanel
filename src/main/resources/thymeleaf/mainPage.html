@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <title>VISCA Web Application</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" th:href="@{/resources/vendor/bootstrap.min.css}">
+    <script th:src="@{/resources/vendor/jquery-3-1-1.min.js}"></script>
+    <script th:src="@{/resources/vendor/bootstrap.min.js}"></script>
+    <script th:src="@{/resources/js/mainPage.js}"></script>
+
+
+    <style>
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background-image: linear-gradient( 135deg, #3B2667 10%, #BC78EC 100%);
+            color: white;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .row {
+            margin-top: 15px;
+        }
+
+        button {
+            box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05);
+            text-transform: uppercase;
+            font-weight: 800 !important;
+            font-size: 14px !important;
+        }
+
+        button:hover {
+            box-shadow: 0 3px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .position-controller .row .btn {
+            height: 90px !important;
+            width: 80px !important;
+            border-radius: 999px;
+            padding: 15px !important;
+        }
+
+        .position-controller .row .btn:active {
+            background: #00ebfa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="border-bottom: 2px rgba(0,235,250,0.51) solid;" class="row">
+        <h6 class="text-center" style="font-weight: 500;">VISCA protocol camera management panel</h6>
+    </div>
+    <div style="height: 150px"></div>
+    <div class="row">
+        <section class="col-lg-4">
+            <h5>Camera speed</h5>
+            <div class="row">
+                <div class="col-lg-4 text-center">
+                    <form>
+                        <div class="from-group">
+                            <input class="form-control" type="number" th:max="${maxSpeed}" min="1" value="8">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="col-lg-4 text-center position-controller">
+            <h5>Camera position</h5>
+            <div class="row">
+                <button class="btn btn-lg btn-success col-md-4 offset-md-4 visca-position-up">up</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-lg btn-success col-md-4 visca-position-left">left</button>
+                <button class="btn btn-lg btn-success col-md-4 offset-md-4 visca-position-right">right</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-lg btn-success col-md-4 offset-md-4 visca-position-down">down</button>
+            </div>
+        </section>
+
+        <section class="col-lg-4 text-center">
+            <h5>Camera zoom</h5>
+            <div class="row">
+                <button class="btn btn-lg btn-primary col-md-4 offset-md-4 visca-zoom-tele">tele</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-lg btn-primary col-md-4 offset-md-4 visca-zoom-wide">wide</button>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <section>
+            <button type="button" class="btn btn-lg btn-outline-primary visca-other-home">home</button>
+        </section>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label for="response">Response:</label>
+                <textarea class="form-control response" rows="5" id="response"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
