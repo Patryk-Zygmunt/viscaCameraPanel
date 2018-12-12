@@ -6,13 +6,13 @@ public final class PanTiltLeftCmd extends Cmd {
 
 
    public byte[] createCommandData() {
-      byte[] cmdData = duplicatArray(ptLeftCommandData);
-      cmdData[3] = 8;
-      cmdData[4] = 1;
+      byte[] cmdData = duplicateArray(ptLeftCommandData);
+//      cmdData[3] = 8;
+//      cmdData[4] = 1;
       return cmdData;
    }
 
-   private static byte[] duplicatArray(byte[] src) {
+   private static byte[] duplicateArray(byte[] src) {
       byte[] dest = new byte[src.length];
       System.arraycopy(src, 0, dest, 0, src.length);
       return dest;

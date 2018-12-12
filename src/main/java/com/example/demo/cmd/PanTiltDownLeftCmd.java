@@ -1,12 +1,12 @@
 package com.example.demo.cmd;
 
-public final class PanTiltUpCmd extends Cmd {
+public final class PanTiltDownLeftCmd extends Cmd {
 
-   private static final byte[] ptUpCommandData = new byte[]{(byte)1, (byte)6, (byte)1, (byte)0, (byte)0, (byte)3, (byte)1};
+   private static final byte[] ptDownLeftCommandData = new byte[]{(byte)1, (byte)6, (byte)1, (byte)0, (byte)0, (byte)1, (byte)2};
 
 
    public byte[] createCommandData() {
-      byte[] cmdData = duplicateArray(ptUpCommandData);
+      byte[] cmdData = duplicateArray(ptDownLeftCommandData);
 //      cmdData[3] = 1;
 //      cmdData[4] = 2;
       return cmdData;

@@ -16,44 +16,46 @@ import java.util.stream.Collectors;
 @Service
 public class Main {
 
-
-   // String commName = "COM3";
-   SerialPort serialPort = null;//new SerialPort(commName);
+    String commName = "COM3";
+    SerialPort serialPort = null; //new SerialPort(commName);
 
     public static Map<String, List<String>> macro = new HashMap<>();
 
     public static Map<String, Supplier<byte[]>> commands = new HashMap<String, Supplier<byte[]>>() {{
         put("ClearAll", Main::sendClearAll);
-        put("PanTiltHome", Main::sendPanTiltHome);
-        put("PanTiltLeft", Main::sendPanTiltLeft);
-        put("PanTiltRight", Main::sendPanTiltRight);
-        put("PanTiltLeft2", Main::sendPanTiltLeft2);
-        put("PanTiltRight2", Main::sendPanTiltRight2);
-        put("PanTiltUp", Main::sendPanTiltUp);
-        put("PanTiltDown", Main::sendPanTiltDown);
-        put("PanTiltAbsolutePosition", Main::sendPanTiltAbsolutePos);
-        put("PanTiltMaxSpeed", Main::sendGetPanTiltMaxSpeed);
-        put("ZoomTeleStd", Main::sendZoomTeleStd);
-        put("ZommTeleWideStd", Main::sendZoomWideStd);
-        put("Address", Main::sendAddress);
+//        put("PanTiltHome", Main::sendPanTiltHome);
+//        put("PanTiltUpLeft", Main::sendPanTiltUpLeft);
+//        put("PanTiltUp", Main::sendPanTiltUp);
+//        put("PanTiltUpRight", Main::sendPanTiltUpRight);
+//        put("PanTiltLeft", Main::sendPanTiltLeft);
+//        put("PanTiltRight", Main::sendPanTiltRight);
+//        put("PanTiltLeft2", Main::sendPanTiltLeft2);
+//        put("PanTiltRight2", Main::sendPanTiltRight2);
+//        put("PanTiltDownLeft", Main::sendPanTiltDownLeft);
+//        put("PanTiltDown", Main::sendPanTiltDown);
+//        put("PanTiltDownRight", Main::sendPanTiltDownRight);
+//        put("PanTiltAbsolutePosition", Main::sendPanTiltAbsolutePos);
+//        put("PanTiltMaxSpeed", Main::sendGetPanTiltMaxSpeed);
+//        put("ZoomTeleStd", Main::sendZoomTeleStd);
+//        put("ZoomWideStd", Main::sendZoomWideStd);
+//        put("Address", Main::sendAddress);
     }};
-
 
     Main() {
         try {
-      //      serialPort.openPort();
-        //              serialPort.setParams(9600, 8, 1, 0);
+            serialPort.openPort();
+            serialPort.setParams(9600, 8, 1, 0);
         } catch (RuntimeException e1) {
             e1.printStackTrace();
-        }// catch (SerialPortException e) {
-           // e.printStackTrace();
-       // }
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
     }
 
     public String command(String command) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            List<String> ActualaMacro = new ArrayList<>();
+            List<String> actualMacro = new ArrayList<>();
             String cmd = reader.readLine();
             if (cmd.contains(":") && !macro.containsKey(cmd)) {
                 List<String> l = Arrays.asList(cmd.split(" "));
@@ -64,7 +66,6 @@ public class Main {
             } else if (macro.containsKey(cmd)) {
                 return macro.get(cmd).stream().map((c) -> runCommand(c, serialPort)).collect(Collectors.joining(" "));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,7 +74,6 @@ public class Main {
 
 
     private static String runCommand(String cmd, SerialPort serial) {
-        System.out.println(cmd);
         try {
             serial.writeBytes(commands.get(cmd).get());
             byte[] response = ViscaResponseReader.readResponse(serial);
@@ -84,10 +84,10 @@ public class Main {
             return "TIMEOUT";
         } catch (SerialPortException e) {
             e.printStackTrace();
+            System.out.println("SERIAL PORT EXCEPTION");
+            return "SERIAL PORT EXCEPTION";
         }
-        return "error";
     }
-
 
     public static void sleep(int timeSec) {
         try {
@@ -95,7 +95,18 @@ public class Main {
         } catch (InterruptedException var2) {
             var2.printStackTrace();
         }
+    }
 
+
+    public void runMacro(String macro) {
+        System.out.println(macro);
+
+        ////// tutaj dostajemy string macro wysłane z frontu
+
+//        List<String> l = Arrays.asList(macro.split(" "));
+//        Map<String, List<String>> macroHashMap = new HashMap<>();
+//        macroHashMap.put(l.get(0), l.subList(1, l.size()));
+//        macroHashMap.get(l.get(0)).forEach((c) -> runCommand(c, serialPort));
     }
 
     public static byte[] sendClearAll() {
@@ -109,7 +120,7 @@ public class Main {
         return cmdData;
     }
 
-    public static byte[] sendPanTiltHome() {
+    public static byte[] sendPanTiltHome(byte destinationAdr) {
         byte[] cmdData = (new PanTiltHomeCmd()).createCommandData();
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
@@ -120,8 +131,10 @@ public class Main {
         return cmdData;
     }
 
-    public static byte[] sendPanTiltLeft() {
-        byte[] cmdData = (new PanTiltLeftCmd()).createCommandData();
+    public static byte[] sendPanTiltUpLeft(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltUpLeftCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
@@ -131,41 +144,10 @@ public class Main {
         return cmdData;
     }
 
-    public static byte[] sendPanTiltLeft2() {
-        byte[] cmdData = (new PanTiltLeftCmd()).createCommandData();
-        ViscaCommand vCmd = new ViscaCommand();
-        vCmd.commandData = cmdData;
-        vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 2;
-        cmdData = vCmd.getCommandData();
-        System.out.println("@ " + byteArrayToString(cmdData));
-        return cmdData;
-    }
-
-    public static byte[] sendPanTiltRight() {
-        byte[] cmdData = (new PanTiltRightCmd()).createCommandData();
-        ViscaCommand vCmd = new ViscaCommand();
-        vCmd.commandData = cmdData;
-        vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
-        cmdData = vCmd.getCommandData();
-        System.out.println("@ " + byteArrayToString(cmdData));
-        return cmdData;
-    }
-
-    public static byte[] sendPanTiltRight2() {
-        byte[] cmdData = (new PanTiltRightCmd()).createCommandData();
-        ViscaCommand vCmd = new ViscaCommand();
-        vCmd.commandData = cmdData;
-        vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 2;
-        cmdData = vCmd.getCommandData();
-        System.out.println("@ " + byteArrayToString(cmdData));
-        return cmdData;
-    }
-
-    public static byte[] sendPanTiltUp() {
+    public static byte[] sendPanTiltUp(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
         byte[] cmdData = (new PanTiltUpCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
@@ -175,8 +157,88 @@ public class Main {
         return cmdData;
     }
 
-    public static byte[] sendPanTiltDown() {
+    public static byte[] sendPanTiltUpRight(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltUpRightCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltLeft(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltLeftCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltLeft2(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltLeftCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 2;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltRight(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltRightCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltRight2(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltRightCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 2;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltDownLeft(byte panSpeed, byte tiltSpeed,  byte destinationAdr) {
+        byte[] cmdData = (new PanTiltDownLeftCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltDown(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
         byte[] cmdData = (new PanTiltDownCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
@@ -186,8 +248,45 @@ public class Main {
         return cmdData;
     }
 
-    public static byte[] sendPanTiltAbsolutePos() {
+    public static byte[] sendPanTiltDownRight(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
+        byte[] cmdData = (new PanTiltDownRightCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendPanTiltAbsolutePos(byte panSpeed, byte tiltSpeed, byte destinationAdr) {
         byte[] cmdData = (new PanTiltAbsolutePosCmd()).createCommandData();
+        cmdData[3] = panSpeed;
+        cmdData[4] = tiltSpeed;
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendZoomTeleStd(byte destinationAdr) {
+        byte[] cmdData = (new ZoomTeleStdCmd()).createCommandData();
+        ViscaCommand vCmd = new ViscaCommand();
+        vCmd.commandData = cmdData;
+        vCmd.sourceAdr = 0;
+        vCmd.destinationAdr = 1;
+        cmdData = vCmd.getCommandData();
+        System.out.println("@ " + byteArrayToString(cmdData));
+        return cmdData;
+    }
+
+    public static byte[] sendZoomWideStd(byte destinationAdr) {
+        byte[] cmdData = (new ZoomWideStdCmd()).createCommandData();
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
@@ -217,8 +316,8 @@ public class Main {
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
-
     }
+
 
     public static String byteArrayToString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -229,31 +328,6 @@ public class Main {
             byte b = var5[var3];
             sb.append(String.format("%02X ", new Object[]{Byte.valueOf(b)}));
         }
-
         return sb.toString();
-    }
-
-    public static byte[] sendZoomTeleStd() {
-        byte[] cmdData = (new ZoomTeleStdCmd()).createCommandData();
-        ViscaCommand vCmd = new ViscaCommand();
-        vCmd.commandData = cmdData;
-        vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
-        cmdData = vCmd.getCommandData();
-        System.out.println("@ " + byteArrayToString(cmdData));
-        return cmdData;
-
-    }
-
-    public static byte[] sendZoomWideStd() {
-        byte[] cmdData = (new ZoomWideStdCmd()).createCommandData();
-        ViscaCommand vCmd = new ViscaCommand();
-        vCmd.commandData = cmdData;
-        vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
-        cmdData = vCmd.getCommandData();
-        System.out.println("@ " + byteArrayToString(cmdData));
-        return cmdData;
-
     }
 }

@@ -1,62 +1,126 @@
 $(function () {
     // ----------------------------------- Position
-    $('.visca-position-up').on('click', function () {
-        console.log("visca-position-up");
+
+    $('#viscaPositionUpLeft').on('click', function () {
+        console.log("viscaPositionUpLeft");
         var data = {
-            'direction': 'UP',
-            'speed': $('input').eq(0).val()
+            'direction': 'UPLEFT',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/position', data);
     });
 
-    $('.visca-position-down').on('click', function () {
-        console.log("visca-position-down");
+    $('#viscaPositionUp').on('click', function () {
+        console.log("viscaPositionUp");
         var data = {
-            'direction': 'DOWN',
-            'speed': $('input').eq(0).val()
+            'direction': 'UP',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/position', data);
     });
-    $('.visca-position-left').on('click', function () {
-        console.log("visca-position-left");
+
+    $('#viscaPositionUpRight').on('click', function () {
+        console.log("viscaPositionUpRight");
+        var data = {
+            'direction': 'UPRIGHT',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
+        };
+        postAPI('/position', data);
+    });
+
+    $('#viscaPositionLeft').on('click', function () {
+        console.log("viscaPositionLeft");
         var data = {
             'direction': 'LEFT',
-            'speed': $('input').eq(0).val()
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/position', data);
     });
-    $('.visca-position-right').on('click', function () {
-        console.log("visca-position-right");
+    $('#viscaPositionRight').on('click', function () {
+        console.log("viscaPositionRight");
         var data = {
             'direction': 'RIGHT',
-            'speed': $('input').eq(0).val()
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/position', data);
     });
+
+    $('#viscaPositionDownLeft').on('click', function () {
+        console.log("viscaPositionDownLeft");
+        var data = {
+            'direction': 'DOWNLEFT',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
+        };
+        postAPI('/position', data);
+    });
+
+    $('#viscaPositionDown').on('click', function () {
+        console.log("viscaPositionDown");
+        var data = {
+            'direction': 'DOWN',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
+        };
+        postAPI('/position', data);
+    });
+
+    $('#viscaPositionDownRight').on('click', function () {
+        console.log("viscaPositionDownRight");
+        var data = {
+            'direction': 'DOWNRIGHT',
+            'tiltSpeed': $('#tiltSpeed').eq(0).val(),
+            'panSpeed': $('#panSpeed').eq(0).val(),
+            'destinationAdr': $('#destinationAddress').eq(0).val()
+        };
+        postAPI('/position', data);
+    });
+
     // ----------------------------------- Zoom
-    $('.visca-zoom-tele').on('click', function () {
-        console.log("visca-zoom-tele");
+    $('#viscaZoomTele').on('click', function () {
+        console.log("viscaZoomTele");
         var data = {
             'zoom': 'TELE',
-            'speed': $('input').eq(0).val()
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/zoom', data);
     });
-    $('.visca-zoom-wide').on('click', function () {
-        console.log("visca-zoom-wide");
+    $('#viscaZoomWide').on('click', function () {
+        console.log("viscaZoomWide");
         var data = {
             'zoom': 'WIDE',
-            'speed': $('input').eq(0).val()
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/zoom', data);
     });
-    $('.visca-other-home').on('click', function () {
-        console.log("visca-other-home");
+
+    $('#viscaHome').on('click', function () {
+        console.log("viscaHome");
         var data = {
             'command': 'HOME',
-            'speed': $('input').eq(0).val()
+            'destinationAdr': $('#destinationAddress').eq(0).val()
         };
         postAPI('/other', data);
+    });
+
+    $('#viscaSendMacro').on('click', function () {
+        console.log("viscaSendMacro");
+        var data = {
+            'macro': $('#viscaMacro').eq(0).val()
+        };
+        postAPI('/macro', data);
     });
 });
 
@@ -66,8 +130,7 @@ function postAPI(endpoint, data) {
         url: '/api' + endpoint,
         data: data,
         success: function (msg) {
-            $('.response').val(msg);
+            $('#response').val(msg);
         }
     });
 }
-

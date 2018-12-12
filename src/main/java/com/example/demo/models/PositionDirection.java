@@ -1,11 +1,14 @@
 package com.example.demo.models;
 
-
 public enum PositionDirection {
+    UPLEFT("upleft"),
     UP("up"),
+    UPRIGHT("upright"),
     LEFT("left"),
     RIGHT("right"),
-    DOWN("down");
+    DOWNLEFT("downleft"),
+    DOWN("down"),
+    DOWNRIGHT("downright");
 
     private String direction;
 

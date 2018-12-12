@@ -1,23 +1,19 @@
 package com.example.demo;
 
+import com.example.demo.models.Macro;
 import com.example.demo.models.OtherCommands;
 import com.example.demo.models.PositionDirection;
 import com.example.demo.models.Zoom;
 import jssc.SerialPort;
 import jssc.SerialPortException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-
 import static com.example.demo.Main.byteArrayToString;
 
-//@RestController
 @Controller
 @RequestMapping("/")
 public class MainController {
@@ -30,8 +26,8 @@ public class MainController {
 //    @GetMapping("/command")
 //    public String command(@RequestParam String cmd) {
 //        return main.command(cmd);
-
-    public MainController() {
+//  }
+    private void openPort() {
         try {
             serialPort.openPort();
             serialPort.setParams(9600, 8, 1, 0);
@@ -42,7 +38,7 @@ public class MainController {
         }
     }
 
-    private  String readResponse() {
+    private String readResponse() {
         try {
             byte[] response = ViscaResponseReader.readResponse(serialPort);
             System.out.println("> " + byteArrayToString(response));
@@ -52,18 +48,26 @@ public class MainController {
             return "TIMEOUT";
         } catch (SerialPortException e) {
             e.printStackTrace();
+            return "SERIAL PORT EXCEPTION";
         }
-        return "error";
+//        return "error";
     }
-
-
-//    }
 
     @RequestMapping(method = RequestMethod.GET)
     private String loadMainPage(Model model) {
 //        Integer maxSpeed = viscaCommandSender.sendGetPanTiltMaxSpeed();
-        Integer maxSpeed = 10;
-        model.addAttribute("maxSpeed", maxSpeed);
+//        Integer maxSpeed = 10;
+//        model.addAttribute("maxSpeed", maxSpeed);
+        openPort();
+        Integer maxPanSpeed = 18;
+        Integer maxTiltSpeed = 14;
+        Integer maxDestinationAddress = 7;
+//          FROM SONY EVI 30D MANUAL:
+//          VV: pan speed 01 to 18,
+//          WW: tilt speed 01 to 14
+        model.addAttribute("maxPanSpeed", maxPanSpeed);
+        model.addAttribute("maxTiltSpeed", maxTiltSpeed);
+        model.addAttribute("maxDestinationAddress", maxDestinationAddress);
         return "mainPage";
     }
 
@@ -73,27 +77,39 @@ public class MainController {
     public class PositionController {
 
         @RequestMapping(method = RequestMethod.GET)
-        private ResponseEntity changeZoom() {
+        private ResponseEntity test() {
             return ResponseEntity.ok("hello from /api/position");
         }
 
         @RequestMapping(method = RequestMethod.POST)
-        private ResponseEntity changePosition(@RequestParam String direction, @RequestParam byte speed) {
+        private ResponseEntity changePosition(@RequestParam String direction, @RequestParam byte panSpeed, @RequestParam byte tiltSpeed,  @RequestParam byte destinationAdr) {
 
             PositionDirection positionDirection = PositionDirection.valueOf(direction);
             byte[] response = null;
             switch (positionDirection) {
-                case UP:
-                    response = main.sendPanTiltUp();
+                case UPLEFT:
+                    response = main.sendPanTiltUpLeft(panSpeed, tiltSpeed, destinationAdr);
                     break;
-                case DOWN:
-                    response = main.sendPanTiltDown();
+                case UP:
+                    response = main.sendPanTiltUp(panSpeed, tiltSpeed, destinationAdr);
+                    break;
+                case UPRIGHT:
+                    response = main.sendPanTiltUpRight(panSpeed, tiltSpeed, destinationAdr);
                     break;
                 case LEFT:
-                    response = main.sendPanTiltLeft();
+                    response = main.sendPanTiltLeft(panSpeed, tiltSpeed, destinationAdr);
                     break;
                 case RIGHT:
-                    response = main.sendPanTiltRight();
+                    response = main.sendPanTiltRight(panSpeed, tiltSpeed, destinationAdr);
+                    break;
+                case DOWNLEFT:
+                    response = main.sendPanTiltDownLeft(panSpeed, tiltSpeed, destinationAdr);
+                    break;
+                case DOWN:
+                    response = main.sendPanTiltDown(panSpeed, tiltSpeed, destinationAdr);
+                    break;
+                case DOWNRIGHT:
+                    response = main.sendPanTiltDownRight(panSpeed, tiltSpeed, destinationAdr);
                     break;
             }
             try {
@@ -104,28 +120,27 @@ public class MainController {
             return ResponseEntity.ok(readResponse());
         }
     }
-
 
     @RestController
     @RequestMapping("/api/zoom")
     public class ZoomController {
 
         @RequestMapping(method = RequestMethod.GET)
-        private ResponseEntity changeZoom() {
+        private ResponseEntity test() {
             return ResponseEntity.ok("hello from /api/zoom");
         }
 
         @RequestMapping(method = RequestMethod.POST)
-        private ResponseEntity changeZoom(@RequestParam String zoom, @RequestParam byte speed) {
+        private ResponseEntity changeZoom(@RequestParam String zoom, @RequestParam byte destinationAdr) {
 
             Zoom zoom1 = Zoom.valueOf(zoom);
             byte[] response = null;
             switch (zoom1) {
                 case WIDE:
-                    response = main.sendZoomWideStd();
+                    response = main.sendZoomWideStd(destinationAdr);
                     break;
                 case TELE:
-                    response = main.sendZoomTeleStd();
+                    response = main.sendZoomTeleStd(destinationAdr);
                     break;
             }
             try {
@@ -136,7 +151,6 @@ public class MainController {
             return ResponseEntity.ok(readResponse());
         }
     }
-
 
     @RestController
     @RequestMapping("/api/other")
@@ -144,24 +158,45 @@ public class MainController {
 
         @RequestMapping(method = RequestMethod.GET)
         private ResponseEntity test() {
-            String response = "hello from /api/other";
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok("hello from /api/other");
         }
 
-
         @RequestMapping(method = RequestMethod.POST)
-        private ResponseEntity changePosition(@RequestParam String command) {
+        private ResponseEntity changePosition(@RequestParam String command, @RequestParam byte destinationAdr) {
 
             byte[] response = null;
             switch (OtherCommands.valueOf(command)) {
                 case HOME:
-                    response = main.sendPanTiltHome();
+                    response = main.sendPanTiltHome(destinationAdr);
                     break;
             }
             try {
                 serialPort.writeBytes(response);
             } catch (SerialPortException e) {
                 e.printStackTrace();
+            }
+
+            return ResponseEntity.ok(readResponse());
+        }
+    }
+
+    @RestController
+    @RequestMapping("/api/macro")
+    public class MacroController {
+
+        @RequestMapping(method = RequestMethod.GET)
+        private ResponseEntity test() {
+            return ResponseEntity.ok("hello from /api/macro");
+        }
+
+        @RequestMapping(method = RequestMethod.POST)
+        private ResponseEntity runMacro(@RequestParam String macro) {
+
+            Macro macro1 = Macro.valueOf(macro);
+            switch (macro1) {
+                case MACRO:
+                    main.runMacro(macro);
+                    break;
             }
 
             return ResponseEntity.ok(readResponse());
