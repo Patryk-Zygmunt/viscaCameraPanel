@@ -125,7 +125,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -138,7 +138,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -151,7 +151,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -164,7 +164,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -177,7 +177,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -190,7 +190,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 2;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -203,7 +203,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -216,7 +216,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 2;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -229,7 +229,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -242,7 +242,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -255,7 +255,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -268,7 +268,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -279,7 +279,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
@@ -290,7 +290,7 @@ public class Main {
         ViscaCommand vCmd = new ViscaCommand();
         vCmd.commandData = cmdData;
         vCmd.sourceAdr = 0;
-        vCmd.destinationAdr = 1;
+        vCmd.destinationAdr = destinationAdr;
         cmdData = vCmd.getCommandData();
         System.out.println("@ " + byteArrayToString(cmdData));
         return cmdData;
